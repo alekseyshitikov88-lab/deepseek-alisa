@@ -20,12 +20,24 @@ async def main(request: Request):
             "messages": [{"role": "user", "content": user_text}],
         }
     )
-    try:
-    answer = response.json()["choices"][0]["message"]["content"]
-except KeyError:
-    # Если ключа 'choices' нет, выводим ошибку в логи и возвращаем заглушку
-    print("Ошибка от Groq:", response.json()) 
+   response = requests.post(
+    DEEPSEEK_API_URL,
+    headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}"},
+    json={
+        "model": "llama-3.1-8b-instant",
+        "messages": [{"role": "user", "content": user_text}],
+    }
+)
+
+# Проверяем, что запрос к Groq прошел успешно
+if response.status_code != 200:
+    # Выводим в логи Render текст ошибки от Groq
+    print("Ошибка от Groq:", response.status_code, response.text)
+    # Возвращаем заглушку, чтобы сервер не падал с ошибкой 500
     answer = "Извините, произошла ошибка при обработке запроса."
+else:
+    # Если все хорошо, извлекаем ответ
+    answer = response.json()["choices"][0]["message"]["content"]
 
     return {
         "version": body["version"],
