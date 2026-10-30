@@ -27,6 +27,7 @@ async def main(request: Request):
         answer = "Извините, произошла ошибка."
     else:
         answer = response.json()["choices"][0]["message"]["content"]
+answer = answer[:1000]  # Обрезаем ответ до 1000 символов для Алисы
 
     return {
         "version": body["version"],
