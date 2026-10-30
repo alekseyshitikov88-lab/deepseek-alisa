@@ -16,7 +16,7 @@ async def main(request: Request):
         DEEPSEEK_API_URL,
         headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}"},
         json={
-            "model": "llama3-8b-8192",
+            "model": "llama-3.1-8b-instant",
             "messages": [{"role": "user", "content": user_text}],
         }
     )
