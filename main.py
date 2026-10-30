@@ -20,7 +20,12 @@ async def main(request: Request):
             "messages": [{"role": "user", "content": user_text}],
         }
     )
+    try:
     answer = response.json()["choices"][0]["message"]["content"]
+except KeyError:
+    # Если ключа 'choices' нет, выводим ошибку в логи и возвращаем заглушку
+    print("Ошибка от Groq:", response.json()) 
+    answer = "Извините, произошла ошибка при обработке запроса."
 
     return {
         "version": body["version"],
